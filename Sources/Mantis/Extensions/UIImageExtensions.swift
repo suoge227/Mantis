@@ -8,12 +8,26 @@
 import UIKit
 
 extension UIImage {
+    
+   public func toCGImage() -> CGImage? {
+        if let cgImage = self.cgImage {
+            return cgImage
+        } else {
+            let ciContext = CIContext(options: nil)
+            if let ciImage = self.ciImage {
+                return ciContext.createCGImage(ciImage, from: ciImage.extent)
+            } else {
+                return nil
+            }
+        }
+    }
+    
     func cgImageWithFixedOrientation() -> CGImage? {
         if imageOrientation == .up {
-            return cgImage
+            return toCGImage()
         }
 
-        guard let cgImage = cgImage, let colorSpace = cgImage.colorSpace else {
+        guard let cgImage = toCGImage(), let colorSpace = cgImage.colorSpace else {
             return nil
         }
         
